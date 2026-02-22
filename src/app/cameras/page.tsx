@@ -1,13 +1,13 @@
 'use client';
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 import { motion } from 'framer-motion';
-import { Camera, Search, Grid3X3, MapIcon, List } from 'lucide-react';
+import { Camera, Search, Grid3X3, MapIcon, List, Loader2 } from 'lucide-react';
 import { GlassCard } from '@/components/ui/GlassCard';
 import { CameraCard, type CameraData } from '@/components/cameras/CameraCard';
 import { StateGrid } from '@/components/cameras/StateGrid';
-import cameraData from '@/data/cameras.json';
+import { useCameraIndex, useStateCameras } from '@/hooks/useCameras';
 
-type ViewMode = 'grid' | 'states' | 'featured';
+type ViewMode = 'grid' | 'states';
 
 const categories = [
   { key: 'all', label: 'All' },
@@ -20,23 +20,32 @@ const categories = [
   { key: 'airport', label: 'Airports' },
 ];
 
+const PAGE_SIZE = 60;
+
 export default function CamerasPage() {
-  const [viewMode, setViewMode] = useState<ViewMode>('featured');
+  const [viewMode, setViewMode] = useState<ViewMode>('states');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
+  const [selectedState, setSelectedState] = useState<string | undefined>(undefined);
+  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
 
-  const cameras = cameraData as CameraData[];
+  const { data: index, loading: indexLoading } = useCameraIndex();
+  const { data: stateCameras, loading: stateCamsLoading } = useStateCameras(selectedState);
 
   const cameraCounts = useMemo(() => {
+    if (!index) return {};
     const counts: Record<string, number> = {};
-    cameras.forEach((c) => {
-      counts[c.stateCode] = (counts[c.stateCode] || 0) + 1;
+    Object.entries(index.states).forEach(([code, info]) => {
+      counts[code] = info.count;
     });
     return counts;
-  }, [cameras]);
+  }, [index]);
+
+  const totalCameras = index?.total || 0;
+  const stateCount = index ? Object.keys(index.states).length : 0;
 
   const filteredCameras = useMemo(() => {
-    let filtered = cameras;
+    let filtered = stateCameras;
     if (searchQuery) {
       const q = searchQuery.toLowerCase();
       filtered = filtered.filter(
@@ -51,17 +60,17 @@ export default function CamerasPage() {
       filtered = filtered.filter((c) => c.category === selectedCategory);
     }
     return filtered;
-  }, [cameras, searchQuery, selectedCategory]);
+  }, [stateCameras, searchQuery, selectedCategory]);
 
-  const featuredCameras = useMemo(
-    () => cameras.filter((c) =>
-      c.category === 'skyline' || c.category === 'landmark' || c.category === 'beach'
-    ).slice(0, 12),
-    [cameras]
-  );
+  const handleStateSelect = useCallback((stateCode: string) => {
+    setSelectedState(stateCode);
+    setViewMode('grid');
+    setVisibleCount(PAGE_SIZE);
+  }, []);
 
-  const totalActive = cameras.filter((c) => c.isActive).length;
-  const stateCount = new Set(cameras.map((c) => c.stateCode)).size;
+  const loadMore = useCallback(() => {
+    setVisibleCount((v) => v + PAGE_SIZE);
+  }, []);
 
   return (
     <div className="min-h-screen px-4 sm:px-6 py-6">
@@ -74,13 +83,16 @@ export default function CamerasPage() {
               Live Cameras
             </h1>
             <p className="text-sm text-[var(--text-secondary)] mt-1">
-              Currently streaming: <span className="text-[var(--primary)] font-semibold data-mono">{totalActive.toLocaleString()}</span> live cameras across <span className="font-semibold">{stateCount} states</span>
+              {indexLoading ? 'Loading...' : (
+                <>
+                  <span className="text-[var(--primary)] font-semibold data-mono">{totalCameras.toLocaleString()}</span> live cameras across <span className="font-semibold">{stateCount} states</span>
+                </>
+              )}
             </p>
           </div>
 
           <div className="flex items-center gap-2">
             {[
-              { mode: 'featured' as ViewMode, icon: Grid3X3, label: 'Featured' },
               { mode: 'states' as ViewMode, icon: MapIcon, label: 'States' },
               { mode: 'grid' as ViewMode, icon: List, label: 'All' },
             ].map(({ mode, icon: Icon, label }) => (
@@ -100,79 +112,98 @@ export default function CamerasPage() {
           </div>
         </div>
 
-        {/* Search + Filters */}
-        <div className="flex flex-col sm:flex-row gap-3 mb-6">
-          <div className="relative flex-1">
-            <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-tertiary)]" />
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => { setSearchQuery(e.target.value); setViewMode('grid'); }}
-              placeholder="Search cameras by city, state, or name..."
-              className="w-full pl-9 pr-4 py-2.5 rounded-xl glass bg-transparent text-sm focus:outline-none focus:ring-2 focus:ring-[var(--primary)]/30"
-            />
+        {/* Search + Filters — only show when in grid mode */}
+        {viewMode === 'grid' && (
+          <div className="flex flex-col sm:flex-row gap-3 mb-6">
+            <div className="relative flex-1">
+              <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-tertiary)]" />
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search cameras by city, state, or name..."
+                className="w-full pl-9 pr-4 py-2.5 rounded-xl glass bg-transparent text-sm focus:outline-none focus:ring-2 focus:ring-[var(--primary)]/30"
+              />
+            </div>
+            <div className="flex gap-1.5 overflow-x-auto pb-1">
+              {categories.map((cat) => (
+                <button
+                  key={cat.key}
+                  onClick={() => setSelectedCategory(cat.key)}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-all ${
+                    selectedCategory === cat.key
+                      ? 'bg-[var(--primary)]/10 text-[var(--primary)]'
+                      : 'text-[var(--text-tertiary)] hover:bg-white/5'
+                  }`}
+                >
+                  {cat.label}
+                </button>
+              ))}
+            </div>
           </div>
-          <div className="flex gap-1.5 overflow-x-auto pb-1">
-            {categories.map((cat) => (
-              <button
-                key={cat.key}
-                onClick={() => { setSelectedCategory(cat.key); if (cat.key !== 'all') setViewMode('grid'); }}
-                className={`px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-all ${
-                  selectedCategory === cat.key
-                    ? 'bg-[var(--primary)]/10 text-[var(--primary)]'
-                    : 'text-[var(--text-tertiary)] hover:bg-white/5'
-                }`}
-              >
-                {cat.label}
-              </button>
-            ))}
-          </div>
-        </div>
+        )}
 
         {/* Content */}
         {viewMode === 'states' && (
-          <StateGrid cameraCounts={cameraCounts} />
+          <StateGrid cameraCounts={cameraCounts} onStateSelect={handleStateSelect} />
         )}
 
-        {viewMode === 'featured' && (
-          <div>
-            <h2 className="text-lg font-semibold mb-4">Featured Cameras</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-              {featuredCameras.map((camera) => (
-                <motion.div
-                  key={camera.id}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                >
-                  <CameraCard camera={camera} />
-                </motion.div>
-              ))}
-            </div>
+        {viewMode === 'grid' && !selectedState && (
+          <div className="text-center py-16">
+            <Camera size={48} className="text-[var(--text-tertiary)] mx-auto mb-4" />
+            <p className="text-[var(--text-secondary)] mb-2">Select a state to browse cameras</p>
+            <button
+              onClick={() => setViewMode('states')}
+              className="text-sm text-[var(--primary)] hover:underline"
+            >
+              View States
+            </button>
           </div>
         )}
 
-        {viewMode === 'grid' && (
+        {viewMode === 'grid' && selectedState && (
           <div>
-            <p className="text-sm text-[var(--text-tertiary)] mb-4">
-              Showing {filteredCameras.length} cameras
-            </p>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-              {filteredCameras.slice(0, 40).map((camera) => (
-                <motion.div
-                  key={camera.id}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                >
-                  <CameraCard camera={camera} />
-                </motion.div>
-              ))}
+            <div className="flex items-center gap-3 mb-4">
+              <button
+                onClick={() => { setViewMode('states'); setSelectedState(undefined); }}
+                className="text-sm text-[var(--primary)] hover:underline"
+              >
+                &larr; All States
+              </button>
+              <span className="text-sm text-[var(--text-tertiary)]">
+                {stateCamsLoading ? 'Loading...' : `${filteredCameras.length.toLocaleString()} cameras`}
+              </span>
             </div>
-            {filteredCameras.length > 40 && (
-              <div className="text-center mt-8">
-                <p className="text-sm text-[var(--text-tertiary)]">
-                  Showing 40 of {filteredCameras.length} cameras. Use search or filters to narrow results.
-                </p>
+
+            {stateCamsLoading ? (
+              <div className="flex items-center justify-center py-16">
+                <Loader2 className="animate-spin text-[var(--primary)]" size={32} />
               </div>
+            ) : (
+              <>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                  {filteredCameras.slice(0, visibleCount).map((camera, i) => (
+                    <motion.div
+                      key={camera.id}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: Math.min(i * 0.02, 0.3) }}
+                    >
+                      <CameraCard camera={camera} />
+                    </motion.div>
+                  ))}
+                </div>
+                {filteredCameras.length > visibleCount && (
+                  <div className="text-center mt-8">
+                    <button
+                      onClick={loadMore}
+                      className="px-6 py-2.5 rounded-xl glass hover:bg-white/5 text-sm text-[var(--primary)] font-medium transition-colors"
+                    >
+                      Load More ({(filteredCameras.length - visibleCount).toLocaleString()} remaining)
+                    </button>
+                  </div>
+                )}
+              </>
             )}
           </div>
         )}

@@ -8,12 +8,10 @@ import { useNationalAlerts } from '@/hooks/useAlerts';
 import { getAlertConfig } from '@/lib/constants/alert-types';
 import { formatRadarTime } from '@/lib/api/rainviewer';
 import { getAllStormCameras } from '@/lib/utils/geo';
-import cameras from '@/data/cameras.json';
+import { fetchCamerasForStates } from '@/hooks/useCameras';
 import type { CameraData } from '@/components/cameras/CameraCard';
 import { RadarControls } from './RadarControls';
 import { LayerPanel } from './LayerPanel';
-
-const allCameras = cameras as CameraData[];
 
 const MAP_STYLES: Record<string, string> = {
   dark: 'https://tiles.openfreemap.org/styles/dark',
@@ -28,6 +26,7 @@ export function RadarMap() {
   const animRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [mapLoaded, setMapLoaded] = useState(false);
   const [frameTime, setFrameTime] = useState('');
+  const [stormCameras, setStormCameras] = useState<CameraData[]>([]);
 
   const { data: radarData } = useRadarFrames();
   const { data: alerts } = useNationalAlerts();
@@ -36,11 +35,35 @@ export function RadarMap() {
     mapStyle, setCurrentFrame, setTotalFrames, setPlaying,
   } = useRadarStore();
 
+  // Load cameras for states with active alerts
+  useEffect(() => {
+    if (!alerts || alerts.length === 0) return;
+
+    const stateCodesFromAlerts = new Set<string>();
+    alerts.forEach((a) => {
+      const area = a.properties.areaDesc || '';
+      const matches = area.match(/\b[A-Z]{2}\b/g);
+      if (matches) matches.forEach((m) => stateCodesFromAlerts.add(m));
+    });
+
+    const validStates = new Set([
+      'AL','AK','AZ','AR','CA','CO','CT','DE','FL','GA','HI','ID','IL','IN','IA',
+      'KS','KY','LA','ME','MD','MA','MI','MN','MS','MO','MT','NE','NV','NH','NJ',
+      'NM','NY','NC','ND','OH','OK','OR','PA','RI','SC','SD','TN','TX','UT','VT',
+      'VA','WA','WV','WI','WY','DC',
+    ]);
+
+    const stateCodes = Array.from(stateCodesFromAlerts).filter((c) => validStates.has(c));
+    if (stateCodes.length === 0) return;
+
+    fetchCamerasForStates(stateCodes).then(setStormCameras);
+  }, [alerts]);
+
   // Storm cameras: cameras inside active warning polygons
   const stormCams = useMemo(() => {
-    if (!alerts) return [];
-    return getAllStormCameras(allCameras, alerts);
-  }, [alerts]);
+    if (!alerts || stormCameras.length === 0) return [];
+    return getAllStormCameras(stormCameras, alerts);
+  }, [alerts, stormCameras]);
 
   // Initialize map
   useEffect(() => {

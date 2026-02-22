@@ -1,22 +1,17 @@
 'use client';
-import { use, useMemo } from 'react';
-import { ArrowLeft, Camera } from 'lucide-react';
+import { use } from 'react';
+import { ArrowLeft, Camera, Loader2 } from 'lucide-react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { CameraCard, type CameraData } from '@/components/cameras/CameraCard';
+import { CameraCard } from '@/components/cameras/CameraCard';
 import { STATE_BY_CODE } from '@/lib/constants/states';
-import cameraData from '@/data/cameras.json';
+import { useStateCameras } from '@/hooks/useCameras';
 
 export default function StateCamerasClient({ params }: { params: Promise<{ state: string }> }) {
   const { state } = use(params);
   const stateCode = state?.toUpperCase();
   const stateInfo = STATE_BY_CODE[stateCode];
-  const cameras = cameraData as CameraData[];
-
-  const stateCameras = useMemo(
-    () => cameras.filter((c) => c.stateCode === stateCode),
-    [cameras, stateCode]
-  );
+  const { data: stateCameras, loading } = useStateCameras(stateCode);
 
   return (
     <div className="min-h-screen px-4 sm:px-6 py-6">
@@ -38,12 +33,16 @@ export default function StateCamerasClient({ params }: { params: Promise<{ state
               {stateInfo?.name || stateCode} Cameras
             </h1>
             <p className="text-sm text-[var(--text-secondary)]">
-              <span className="text-[var(--primary)] font-semibold data-mono">{stateCameras.length}</span> live cameras
+              <span className="text-[var(--primary)] font-semibold data-mono">{stateCameras.length.toLocaleString()}</span> live cameras
             </p>
           </div>
         </div>
 
-        {stateCameras.length === 0 ? (
+        {loading ? (
+          <div className="flex items-center justify-center py-16">
+            <Loader2 className="animate-spin text-[var(--primary)]" size={32} />
+          </div>
+        ) : stateCameras.length === 0 ? (
           <div className="text-center py-16">
             <Camera size={48} className="text-[var(--text-tertiary)] mx-auto mb-4" />
             <p className="text-[var(--text-secondary)]">No cameras found for this state</p>
@@ -55,7 +54,7 @@ export default function StateCamerasClient({ params }: { params: Promise<{ state
                 key={camera.id}
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: Math.min(i * 0.03, 0.5) }}
+                transition={{ delay: Math.min(i * 0.02, 0.5) }}
               >
                 <CameraCard camera={camera} />
               </motion.div>

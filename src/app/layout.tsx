@@ -1,9 +1,7 @@
 import type { Metadata, Viewport } from 'next';
 import './globals.css';
 import { Providers } from '@/components/layout/Providers';
-import { Sidebar } from '@/components/layout/Sidebar';
-import { MobileNav } from '@/components/layout/MobileNav';
-import { AlertBanner } from '@/components/weather/AlertBanner';
+import { AppShell } from '@/components/layout/AppShell';
 
 export const metadata: Metadata = {
   title: {
@@ -45,12 +43,9 @@ export default function RootLayout({
     <html lang="en" data-theme="dark" suppressHydrationWarning>
       <body className="antialiased">
         <Providers>
-          <AlertBanner />
-          <Sidebar />
-          <MobileNav />
-          <main className="main-content">
+          <AppShell>
             {children}
-          </main>
+          </AppShell>
         </Providers>
       </body>
     </html>

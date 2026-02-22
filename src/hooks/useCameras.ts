@@ -2,7 +2,18 @@
 import { useState, useEffect, useCallback } from 'react';
 import type { CameraData } from '@/components/cameras/CameraCard';
 
-const BASE = '/data/cameras';
+// Detect basePath from current page URL for GitHub Pages compatibility
+let _base: string | null = null;
+function getBase() {
+  if (_base) return _base;
+  if (typeof window !== 'undefined') {
+    const match = window.location.pathname.match(/^\/([^/]+)\//);
+    _base = match ? `/${match[1]}/data/cameras` : '/data/cameras';
+  } else {
+    _base = '/data/cameras';
+  }
+  return _base;
+}
 
 interface CameraIndex {
   total: number;
@@ -28,7 +39,7 @@ export function useCameraIndex() {
 
   useEffect(() => {
     if (indexCache) return;
-    fetch(`${BASE}/index.json`)
+    fetch(`${getBase()}/index.json`)
       .then((r) => r.json())
       .then((d: CameraIndex) => {
         indexCache = d;
@@ -47,7 +58,7 @@ export function useCameraMarkers() {
 
   useEffect(() => {
     if (markersCache) return;
-    fetch(`${BASE}/markers.json`)
+    fetch(`${getBase()}/markers.json`)
       .then((r) => r.json())
       .then((d: CameraMarker[]) => {
         markersCache = d;
@@ -73,7 +84,7 @@ export function useStateCameras(stateCode: string | undefined) {
       return;
     }
     setLoading(true);
-    fetch(`${BASE}/${code.toLowerCase()}.json`)
+    fetch(`${getBase()}/${code.toLowerCase()}.json`)
       .then((r) => r.json())
       .then((d: CameraData[]) => {
         stateCache[code] = d;
@@ -99,7 +110,7 @@ export function useCameraById(id: string | undefined) {
       let markers = markersCache;
       if (!markers) {
         try {
-          const r = await fetch(`${BASE}/markers.json`);
+          const r = await fetch(`${getBase()}/markers.json`);
           markers = await r.json();
           markersCache = markers;
         } catch { setLoading(false); return; }
@@ -112,7 +123,7 @@ export function useCameraById(id: string | undefined) {
       let stateCams = stateCache[stateCode];
       if (!stateCams) {
         try {
-          const r = await fetch(`${BASE}/${stateCode.toLowerCase()}.json`);
+          const r = await fetch(`${getBase()}/${stateCode.toLowerCase()}.json`);
           stateCams = await r.json();
           stateCache[stateCode] = stateCams;
         } catch { setLoading(false); return; }
@@ -142,7 +153,7 @@ export async function fetchCamerasForStates(stateCodes: string[]): Promise<Camer
         return;
       }
       try {
-        const r = await fetch(`${BASE}/${code.toLowerCase()}.json`);
+        const r = await fetch(`${getBase()}/${code.toLowerCase()}.json`);
         const data: CameraData[] = await r.json();
         stateCache[code] = data;
         results.push(...data);

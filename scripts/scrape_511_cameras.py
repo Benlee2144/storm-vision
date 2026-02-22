@@ -79,6 +79,30 @@ STATES_511 = [
         "image_base": "https://www.511la.org",
         "attribution": "LADOTD / 511LA",
     },
+    {
+        "code": "ID",
+        "name": "Idaho",
+        "url": "https://511.idaho.gov/List/GetData/Cameras",
+        "referer": "https://511.idaho.gov/",
+        "image_base": "https://511.idaho.gov",
+        "attribution": "ITD / 511 Idaho",
+    },
+    {
+        "code": "UT",
+        "name": "Utah",
+        "url": "https://udottraffic.utah.gov/List/GetData/Cameras",
+        "referer": "https://udottraffic.utah.gov/",
+        "image_base": "https://udottraffic.utah.gov",
+        "attribution": "UDOT Traffic",
+    },
+    {
+        "code": "NV",
+        "name": "Nevada",
+        "url": "https://www.nvroads.com/List/GetData/Cameras",
+        "referer": "https://www.nvroads.com/",
+        "image_base": "https://www.nvroads.com",
+        "attribution": "NDOT / NVRoads",
+    },
 ]
 
 

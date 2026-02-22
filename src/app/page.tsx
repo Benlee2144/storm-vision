@@ -138,7 +138,7 @@ export default function HomePage() {
       >
         <div className="glass rounded-2xl px-2 py-1.5 flex items-center gap-1 shadow-2xl">
           <QuickNavBtn href="/radar" icon={Map} label="Radar" />
-          <QuickNavBtn href="/cameras" icon={Camera} label="Cameras" count="25K+" />
+          <QuickNavBtn href="/cameras" icon={Camera} label="Cameras" count="50K+" />
           <QuickNavBtn href="/storm-cams" icon={Shield} label="Storm Cams" />
           <QuickNavBtn href="/severe" icon={AlertTriangle} label="Severe" count={severeAlerts.length > 0 ? String(severeAlerts.length) : undefined} danger />
           <QuickNavBtn href="/forecast" icon={BarChart3} label="Forecast" />
@@ -154,7 +154,7 @@ export default function HomePage() {
       >
         <div className="glass rounded-2xl px-4 py-3 shadow-2xl">
           <div className="flex items-center gap-5">
-            <MiniStat icon={Camera} value="25K+" label="Cameras" />
+            <MiniStat icon={Camera} value="50K+" label="Cameras" />
             <MiniStat icon={Radio} value="50" label="States" />
             <MiniStat icon={Eye} value="24/7" label="Live" />
           </div>

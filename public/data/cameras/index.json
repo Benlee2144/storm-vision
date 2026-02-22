@@ -1,5 +1,5 @@
 {
-  "total": 47521,
+  "total": 50617,
   "states": {
     "AK": {
       "count": 461,
@@ -54,7 +54,7 @@
       "file": "ia.json"
     },
     "ID": {
-      "count": 2,
+      "count": 451,
       "file": "id.json"
     },
     "IL": {
@@ -134,7 +134,7 @@
       "file": "nm.json"
     },
     "NV": {
-      "count": 526,
+      "count": 1171,
       "file": "nv.json"
     },
     "NY": {
@@ -178,7 +178,7 @@
       "file": "tx.json"
     },
     "UT": {
-      "count": 4,
+      "count": 2006,
       "file": "ut.json"
     },
     "VA": {

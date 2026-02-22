@@ -1,5 +1,5 @@
 {
-  "total": 18412,
+  "total": 19078,
   "states": {
     "AK": {
       "count": 4,
@@ -170,7 +170,7 @@
       "file": "sd.json"
     },
     "TN": {
-      "count": 4,
+      "count": 670,
       "file": "tn.json"
     },
     "TX": {

@@ -23,17 +23,21 @@ export function AlertCard({ alert, compact = false }: Props) {
 
   if (compact) {
     return (
-      <div
-        className="flex items-center gap-3 p-3 rounded-xl glass hover:bg-white/5 transition-colors cursor-pointer"
-        style={{ borderLeft: `3px solid ${config.color}` }}
-      >
-        <AlertTriangle size={16} style={{ color: config.color }} className="shrink-0" />
-        <div className="flex-1 min-w-0">
-          <p className="text-sm font-medium truncate">{p.event}</p>
-          <p className="text-xs text-[var(--text-tertiary)] truncate">{p.areaDesc?.split(';')[0]}</p>
+      <Link href="/alerts" className="block">
+        <div
+          className="flex items-center gap-2.5 p-2.5 rounded-xl glass hover:bg-white/5 transition-colors cursor-pointer"
+          style={{ borderLeft: `3px solid ${config.color}` }}
+        >
+          <AlertTriangle size={14} style={{ color: config.color }} className="shrink-0" />
+          <div className="flex-1 min-w-0">
+            <p className="text-xs font-semibold truncate" style={{ color: config.color }}>{p.event}</p>
+            <p className="text-[11px] text-[var(--text-tertiary)] truncate mt-0.5">
+              {p.areaDesc?.split(';')[0]?.trim()}
+            </p>
+          </div>
+          <ChevronRight size={12} className="text-[var(--text-tertiary)] shrink-0" />
         </div>
-        <ChevronRight size={14} className="text-[var(--text-tertiary)] shrink-0" />
-      </div>
+      </Link>
     );
   }
 

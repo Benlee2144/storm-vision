@@ -1,8 +1,9 @@
 'use client';
 import { useState, useMemo, useCallback } from 'react';
 import { motion } from 'framer-motion';
-import { Camera, Search, Grid3X3, MapIcon, List, Loader2 } from 'lucide-react';
+import { Camera, Search, Grid3X3, MapIcon, List } from 'lucide-react';
 import { GlassCard } from '@/components/ui/GlassCard';
+import { CameraGridSkeleton } from '@/components/ui/Skeleton';
 import { CameraCard, type CameraData } from '@/components/cameras/CameraCard';
 import { StateGrid } from '@/components/cameras/StateGrid';
 import { useCameraIndex, useStateCameras } from '@/hooks/useCameras';
@@ -176,9 +177,7 @@ export default function CamerasPage() {
             </div>
 
             {stateCamsLoading ? (
-              <div className="flex items-center justify-center py-16">
-                <Loader2 className="animate-spin text-[var(--primary)]" size={32} />
-              </div>
+              <CameraGridSkeleton count={12} />
             ) : (
               <>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">

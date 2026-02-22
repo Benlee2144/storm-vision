@@ -14,10 +14,11 @@ import { useWeather } from '@/hooks/useWeather';
 import { useAlerts, useNationalAlerts } from '@/hooks/useAlerts';
 import { getWeatherDescription } from '@/lib/api/openmeteo';
 import { formatTemp, formatWind, degreesToCardinal } from '@/lib/utils/formatters';
+import { MapLoadingSkeleton } from '@/components/ui/Skeleton';
 
 const RadarMap = dynamic(
   () => import('@/components/radar/RadarMap').then((m) => m.RadarMap),
-  { ssr: false }
+  { ssr: false, loading: () => <MapLoadingSkeleton /> }
 );
 
 export default function HomePage() {
@@ -36,7 +37,7 @@ export default function HomePage() {
   const weatherDesc = current ? getWeatherDescription(current.weatherCode, current.isDay) : null;
 
   return (
-    <div className="relative w-full h-screen overflow-hidden">
+    <div className="relative w-full h-[100dvh] overflow-hidden">
       {/* FULL-SCREEN RADAR MAP AS BACKGROUND */}
       <div className="absolute inset-0 z-0">
         <RadarMap />
@@ -137,7 +138,7 @@ export default function HomePage() {
       >
         <div className="glass rounded-2xl px-2 py-1.5 flex items-center gap-1 shadow-2xl">
           <QuickNavBtn href="/radar" icon={Map} label="Radar" />
-          <QuickNavBtn href="/cameras" icon={Camera} label="Cameras" count="18K+" />
+          <QuickNavBtn href="/cameras" icon={Camera} label="Cameras" count="25K+" />
           <QuickNavBtn href="/storm-cams" icon={Shield} label="Storm Cams" />
           <QuickNavBtn href="/severe" icon={AlertTriangle} label="Severe" count={severeAlerts.length > 0 ? String(severeAlerts.length) : undefined} danger />
           <QuickNavBtn href="/forecast" icon={BarChart3} label="Forecast" />
@@ -153,18 +154,32 @@ export default function HomePage() {
       >
         <div className="glass rounded-2xl px-4 py-3 shadow-2xl">
           <div className="flex items-center gap-5">
-            <MiniStat icon={Camera} value="18K+" label="Cameras" />
+            <MiniStat icon={Camera} value="25K+" label="Cameras" />
             <MiniStat icon={Radio} value="50" label="States" />
             <MiniStat icon={Eye} value="24/7" label="Live" />
           </div>
         </div>
       </motion.div>
 
-      {/* MOBILE BOTTOM CARD */}
-      <div className="absolute bottom-20 left-2 right-2 z-20 lg:hidden">
-        <div className="glass rounded-2xl p-3 shadow-2xl">
+      {/* MOBILE BOTTOM CARD — sits above mobile nav (72px) */}
+      <div className="absolute bottom-[76px] left-2 right-2 z-20 lg:hidden">
+        <div className="glass rounded-2xl p-3 shadow-2xl max-h-[45vh] overflow-hidden">
+          {/* Mobile alerts — max 2 */}
+          {severeAlerts.length > 0 && (
+            <div className="mb-2 space-y-1.5">
+              {severeAlerts.slice(0, 2).map((alert) => (
+                <AlertCard key={alert.id} alert={alert} compact />
+              ))}
+              {severeAlerts.length > 2 && (
+                <Link href="/alerts" className="block text-center text-[10px] text-[var(--primary)] py-1 hover:underline">
+                  +{severeAlerts.length - 2} more warnings
+                </Link>
+              )}
+            </div>
+          )}
+
           {current && (
-            <div className="flex items-center gap-3 mb-3">
+            <div className="flex items-center gap-3 mb-2">
               <div>
                 <span className="temp-display text-3xl">
                   {Math.round(current.temperature)}°

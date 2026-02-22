@@ -1,5 +1,5 @@
 {
-  "total": 23000,
+  "total": 25493,
   "states": {
     "AK": {
       "count": 4,
@@ -110,7 +110,7 @@
       "file": "mt.json"
     },
     "NC": {
-      "count": 5,
+      "count": 771,
       "file": "nc.json"
     },
     "ND": {
@@ -182,7 +182,7 @@
       "file": "ut.json"
     },
     "VA": {
-      "count": 4,
+      "count": 1731,
       "file": "va.json"
     },
     "VT": {

@@ -1,13 +1,23 @@
 'use client';
-import { BarChart3 } from 'lucide-react';
+import { Suspense } from 'react';
+import { useSearchParams } from 'next/navigation';
+import { BarChart3, Loader2 } from 'lucide-react';
 import { LocationSearch } from '@/components/shared/LocationSearch';
 import { CurrentConditions } from '@/components/weather/CurrentConditions';
 import { HourlyTimeline } from '@/components/weather/HourlyTimeline';
 import { DailyForecast } from '@/components/weather/DailyForecast';
 import { useGeolocation } from '@/hooks/useGeolocation';
 
-export default function ForecastIndexPage() {
+function ForecastContent() {
   const { location } = useGeolocation();
+  const searchParams = useSearchParams();
+  const qLat = searchParams.get('lat');
+  const qLon = searchParams.get('lon');
+  const qName = searchParams.get('name');
+  
+  const forecastLat = qLat ? parseFloat(qLat) : location?.lat;
+  const forecastLon = qLon ? parseFloat(qLon) : location?.lon;
+  const forecastName = qName || location?.name;
 
   return (
     <div className="min-h-screen px-4 sm:px-6 py-6">
@@ -23,14 +33,22 @@ export default function ForecastIndexPage() {
           <LocationSearch placeholder="Search a city for forecast..." />
         </div>
 
-        {location && (
+        {forecastLat && forecastLon && (
           <div className="space-y-4">
-            <CurrentConditions lat={location.lat} lon={location.lon} locationName={location.name} />
-            <HourlyTimeline lat={location.lat} lon={location.lon} />
-            <DailyForecast lat={location.lat} lon={location.lon} />
+            <CurrentConditions lat={forecastLat} lon={forecastLon} locationName={forecastName || undefined} />
+            <HourlyTimeline lat={forecastLat} lon={forecastLon} />
+            <DailyForecast lat={forecastLat} lon={forecastLon} />
           </div>
         )}
       </div>
     </div>
+  );
+}
+
+export default function ForecastIndexPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><Loader2 className="animate-spin text-[var(--primary)]" size={32} /></div>}>
+      <ForecastContent />
+    </Suspense>
   );
 }

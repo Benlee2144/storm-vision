@@ -64,8 +64,7 @@ export function LocationSearch({
     setOpen(false);
     onSelect?.(result);
     if (navigateOnSelect) {
-      const slug = name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/-+$/, '');
-      router.push(`/forecast/${slug}?lat=${result.lat}&lon=${result.lon}`);
+      router.push(`/forecast?lat=${result.lat}&lon=${result.lon}&name=${encodeURIComponent(name)}`);
     }
   };
 

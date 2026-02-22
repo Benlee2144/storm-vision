@@ -1,16 +1,16 @@
 'use client';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, Map, Camera, Bell, Menu } from 'lucide-react';
+import { Home, Map, Camera, Bell, Shield } from 'lucide-react';
 import { clsx } from 'clsx';
 import { motion } from 'framer-motion';
 
 const navItems = [
   { href: '/', icon: Home, label: 'Home' },
   { href: '/radar', icon: Map, label: 'Radar' },
+  { href: '/storm-cams', icon: Shield, label: 'Storm' },
   { href: '/cameras', icon: Camera, label: 'Cameras' },
   { href: '/alerts', icon: Bell, label: 'Alerts' },
-  { href: '/severe', icon: Menu, label: 'More' },
 ];
 
 export function MobileNav() {

@@ -4,7 +4,7 @@ import { usePathname } from 'next/navigation';
 import { motion } from 'framer-motion';
 import {
   Home, Map, Camera, AlertTriangle, BarChart3,
-  Bell, Settings, ChevronLeft, ChevronRight
+  Bell, Settings, ChevronLeft, ChevronRight, Shield
 } from 'lucide-react';
 import { clsx } from 'clsx';
 import { Logo } from '@/components/shared/Logo';
@@ -14,6 +14,7 @@ import { useSettingsStore } from '@/stores/useSettingsStore';
 const navItems = [
   { href: '/', icon: Home, label: 'Home' },
   { href: '/radar', icon: Map, label: 'Live Radar' },
+  { href: '/storm-cams', icon: Shield, label: 'Storm Cams' },
   { href: '/cameras', icon: Camera, label: 'Live Cameras' },
   { href: '/severe', icon: AlertTriangle, label: 'Severe Weather' },
   { href: '/forecast', icon: BarChart3, label: 'Forecast' },

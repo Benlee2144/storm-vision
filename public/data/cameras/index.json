@@ -1,52 +1,201 @@
 {
-  "FL": 4665,
-  "TX": 2339,
-  "LA": 328,
-  "CA": 6830,
-  "AZ": 722,
-  "NM": 197,
-  "AL": 1222,
-  "GA": 2893,
-  "SC": 1470,
-  "NV": 727,
-  "OK": 1,
-  "TN": 568,
-  "NC": 340,
-  "NE": 354,
-  "UT": 2002,
-  "CO": 2441,
-  "KS": 728,
-  "MO": 1057,
-  "IL": 4167,
-  "IN": 656,
-  "KY": 1208,
-  "OH": 2263,
-  "VA": 1482,
-  "WV": 127,
-  "MD": 557,
-  "DE": 633,
-  "NJ": 60,
-  "OR": 1136,
-  "AK": 746,
-  "ID": 461,
-  "WY": 733,
-  "IA": 4196,
-  "MI": 1519,
-  "PA": 1433,
-  "NY": 2880,
-  "RI": 135,
-  "CT": 265,
-  "MA": 8,
-  "MT": 124,
-  "MS": 4,
-  "SD": 201,
-  "MN": 1744,
-  "WI": 450,
-  "VT": 85,
-  "ME": 178,
-  "NH": 179,
-  "WA": 3545,
-  "ND": 1643,
-  "HI": 215,
-  "_total": 61917
+  "total": 61917,
+  "states": {
+    "AK": {
+      "count": 746,
+      "file": "ak.json"
+    },
+    "AL": {
+      "count": 1222,
+      "file": "al.json"
+    },
+    "AZ": {
+      "count": 722,
+      "file": "az.json"
+    },
+    "CA": {
+      "count": 6830,
+      "file": "ca.json"
+    },
+    "CO": {
+      "count": 2441,
+      "file": "co.json"
+    },
+    "CT": {
+      "count": 265,
+      "file": "ct.json"
+    },
+    "DE": {
+      "count": 633,
+      "file": "de.json"
+    },
+    "FL": {
+      "count": 4665,
+      "file": "fl.json"
+    },
+    "GA": {
+      "count": 2893,
+      "file": "ga.json"
+    },
+    "HI": {
+      "count": 215,
+      "file": "hi.json"
+    },
+    "IA": {
+      "count": 4196,
+      "file": "ia.json"
+    },
+    "ID": {
+      "count": 461,
+      "file": "id.json"
+    },
+    "IL": {
+      "count": 4167,
+      "file": "il.json"
+    },
+    "IN": {
+      "count": 656,
+      "file": "in.json"
+    },
+    "KS": {
+      "count": 728,
+      "file": "ks.json"
+    },
+    "KY": {
+      "count": 1208,
+      "file": "ky.json"
+    },
+    "LA": {
+      "count": 328,
+      "file": "la.json"
+    },
+    "MA": {
+      "count": 8,
+      "file": "ma.json"
+    },
+    "MD": {
+      "count": 557,
+      "file": "md.json"
+    },
+    "ME": {
+      "count": 178,
+      "file": "me.json"
+    },
+    "MI": {
+      "count": 1519,
+      "file": "mi.json"
+    },
+    "MN": {
+      "count": 1744,
+      "file": "mn.json"
+    },
+    "MO": {
+      "count": 1057,
+      "file": "mo.json"
+    },
+    "MS": {
+      "count": 4,
+      "file": "ms.json"
+    },
+    "MT": {
+      "count": 124,
+      "file": "mt.json"
+    },
+    "NC": {
+      "count": 340,
+      "file": "nc.json"
+    },
+    "ND": {
+      "count": 1643,
+      "file": "nd.json"
+    },
+    "NE": {
+      "count": 354,
+      "file": "ne.json"
+    },
+    "NH": {
+      "count": 179,
+      "file": "nh.json"
+    },
+    "NJ": {
+      "count": 60,
+      "file": "nj.json"
+    },
+    "NM": {
+      "count": 197,
+      "file": "nm.json"
+    },
+    "NV": {
+      "count": 727,
+      "file": "nv.json"
+    },
+    "NY": {
+      "count": 2880,
+      "file": "ny.json"
+    },
+    "OH": {
+      "count": 2263,
+      "file": "oh.json"
+    },
+    "OK": {
+      "count": 1,
+      "file": "ok.json"
+    },
+    "OR": {
+      "count": 1136,
+      "file": "or.json"
+    },
+    "PA": {
+      "count": 1433,
+      "file": "pa.json"
+    },
+    "RI": {
+      "count": 135,
+      "file": "ri.json"
+    },
+    "SC": {
+      "count": 1470,
+      "file": "sc.json"
+    },
+    "SD": {
+      "count": 201,
+      "file": "sd.json"
+    },
+    "TN": {
+      "count": 568,
+      "file": "tn.json"
+    },
+    "TX": {
+      "count": 2339,
+      "file": "tx.json"
+    },
+    "UT": {
+      "count": 2002,
+      "file": "ut.json"
+    },
+    "VA": {
+      "count": 1482,
+      "file": "va.json"
+    },
+    "VT": {
+      "count": 85,
+      "file": "vt.json"
+    },
+    "WA": {
+      "count": 3545,
+      "file": "wa.json"
+    },
+    "WI": {
+      "count": 450,
+      "file": "wi.json"
+    },
+    "WV": {
+      "count": 127,
+      "file": "wv.json"
+    },
+    "WY": {
+      "count": 733,
+      "file": "wy.json"
+    }
+  }
 }

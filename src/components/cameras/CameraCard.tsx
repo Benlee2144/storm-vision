@@ -99,7 +99,7 @@ export function CameraCard({ camera, showEmbed = false }: Props) {
   return (
     <div ref={cardRef} className="glass rounded-xl overflow-hidden group hover:border-[var(--border-hover)] transition-all duration-200">
       {/* Thumbnail with auto-refresh */}
-      <Link href={`/cameras/${camera.id}`}>
+      <a href={camera.streamUrl || camera.thumbnailUrl || "#"} target="_blank" rel="noopener noreferrer">
         <div className="relative aspect-video bg-black/20 overflow-hidden">
           {isVisible && imgSrc && !imgError ? (
             <div className="relative w-full h-full">
@@ -149,10 +149,10 @@ export function CameraCard({ camera, showEmbed = false }: Props) {
             </div>
           </div>
         </div>
-      </Link>
+      </a>
 
       {/* Info */}
-      <Link href={`/cameras/${camera.id}`}>
+      <a href={camera.streamUrl || camera.thumbnailUrl || "#"} target="_blank" rel="noopener noreferrer">
         <div className="p-3">
           <h4 className="font-medium text-sm truncate mb-1">{camera.name}</h4>
           <div className="flex items-center gap-2 text-xs text-[var(--text-tertiary)]">
@@ -166,7 +166,7 @@ export function CameraCard({ camera, showEmbed = false }: Props) {
             <p className="text-[10px] text-[var(--text-tertiary)] mt-1 truncate">{camera.highway}</p>
           )}
         </div>
-      </Link>
+      </a>
     </div>
   );
 }

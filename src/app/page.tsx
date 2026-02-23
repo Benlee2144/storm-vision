@@ -15,6 +15,7 @@ import { useAlerts, useNationalAlerts } from '@/hooks/useAlerts';
 import { getWeatherDescription } from '@/lib/api/openmeteo';
 import { formatTemp, formatWind, degreesToCardinal } from '@/lib/utils/formatters';
 import { MapLoadingSkeleton } from '@/components/ui/Skeleton';
+import { ErrorBoundary } from '@/components/ui/ErrorBoundary';
 
 const RadarMap = dynamic(
   () => import('@/components/radar/RadarMap').then((m) => m.RadarMap),
@@ -40,7 +41,9 @@ export default function HomePage() {
     <div className="relative w-full h-[100dvh] overflow-hidden">
       {/* FULL-SCREEN RADAR MAP AS BACKGROUND */}
       <div className="absolute inset-0 z-0">
-        <RadarMap />
+        <ErrorBoundary fallback={<div className="w-full h-full bg-[var(--bg)]" />}>
+          <RadarMap />
+        </ErrorBoundary>
       </div>
 
       {/* FLOATING SEARCH BAR — top center */}

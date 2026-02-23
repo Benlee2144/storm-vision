@@ -117,6 +117,8 @@ export function RadarMap() {
         type: 'raster',
         tiles: [tileUrl],
         tileSize: 256,
+        // @ts-expect-error - MapLibre supports this but types are incomplete
+        crossOrigin: null,
       });
 
       m.addLayer({

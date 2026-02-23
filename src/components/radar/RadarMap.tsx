@@ -76,6 +76,10 @@ export function RadarMap() {
       .then((markers: Array<{ i: string; n: string; a: number; o: number; s: string; c: string }>) => {
         if (!m || m._removed) return;
 
+        // We need stream URLs for popups — load state files on demand
+        // For now, store marker data for lookups
+        const markerIndex = new Map(markers.map((mk) => [mk.i, mk]));
+
         const geojson: GeoJSON.FeatureCollection = {
           type: 'FeatureCollection',
           features: markers.map((mk) => ({
@@ -84,6 +88,9 @@ export function RadarMap() {
             properties: { id: mk.i, name: mk.n, state: mk.s, cat: mk.c },
           })),
         };
+
+        // Cache for loaded state camera data
+        const stateDataCache: Record<string, Record<string, { streamUrl: string; city: string }>> = {};
 
         m.addSource('all-cameras', { type: 'geojson', data: geojson });
 
@@ -120,27 +127,52 @@ export function RadarMap() {
           },
         });
 
-        // Click → popup with camera info + link to stream
-        m.on('click', 'cameras-circle', (e) => {
+        // Click → load stream URL from state file, show popup with direct link
+        m.on('click', 'cameras-circle', async (e) => {
           if (!e.features || !e.features[0]) return;
           const props = e.features[0].properties!;
           const coords = (e.features[0].geometry as GeoJSON.Point).coordinates.slice() as [number, number];
+          const stateCode = props.state;
 
-          // Build stream URL (camera detail page)
-          const camUrl = `${base}/cameras/${encodeURIComponent(props.id)}/`;
-
-          new maplibregl.Popup({ offset: 12, maxWidth: '260px' })
+          // Show loading popup immediately
+          const popup = new maplibregl.Popup({ offset: 12, maxWidth: '320px' })
             .setLngLat(coords)
             .setHTML(`
               <div style="font-family:system-ui,sans-serif;">
                 <strong style="font-size:13px;color:#00d4ff;">${props.name}</strong>
-                <p style="font-size:11px;opacity:0.7;margin:2px 0 6px;">${props.state}</p>
-                <a href="${camUrl}" style="display:inline-block;padding:4px 10px;background:#00d4ff;color:#000;border-radius:6px;font-size:11px;font-weight:600;text-decoration:none;">
-                  ▶ Watch Live
-                </a>
+                <p style="font-size:11px;opacity:0.7;margin:2px 0 4px;">${stateCode}</p>
+                <p style="font-size:11px;opacity:0.5;">Loading stream...</p>
               </div>
             `)
             .addTo(m);
+
+          // Load state camera data if not cached
+          if (!stateDataCache[stateCode]) {
+            try {
+              const resp = await fetch(base + '/data/cameras/' + stateCode.toLowerCase() + '.json');
+              const cams = await resp.json();
+              const lookup: Record<string, { streamUrl: string; city: string }> = {};
+              for (const c of cams) lookup[c.id] = { streamUrl: c.streamUrl, city: c.city || '' };
+              stateDataCache[stateCode] = lookup;
+            } catch { stateDataCache[stateCode] = {}; }
+          }
+
+          const camData = stateDataCache[stateCode]?.[props.id];
+          const streamUrl = camData?.streamUrl || '';
+          const city = camData?.city || '';
+          const location = city ? city + ', ' + stateCode : stateCode;
+
+          const btn = streamUrl
+            ? '<a href="' + streamUrl + '" target="_blank" rel="noopener noreferrer" style="display:inline-block;padding:5px 12px;background:#00d4ff;color:#000;border-radius:6px;font-size:12px;font-weight:600;text-decoration:none;">▶ Watch Live</a>'
+            : '<p style="font-size:11px;opacity:0.5;">Stream unavailable</p>';
+
+          popup.setHTML(
+            '<div style="font-family:system-ui,sans-serif;">' +
+            '<strong style="font-size:13px;color:#00d4ff;">' + props.name + '</strong>' +
+            '<p style="font-size:11px;opacity:0.7;margin:2px 0 6px;">' + location + '</p>' +
+            btn +
+            '</div>'
+          );
         });
 
         m.on('mouseenter', 'cameras-circle', () => { m.getCanvas().style.cursor = 'pointer'; });

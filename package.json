@@ -4,9 +4,10 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "next build && cp out/index.html out/404.html",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "postbuild": "cp out/index.html out/404.html"
   },
   "dependencies": {
     "@tanstack/react-query": "^5.90.21",

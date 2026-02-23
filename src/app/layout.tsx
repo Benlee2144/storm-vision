@@ -41,6 +41,31 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" data-theme="dark" suppressHydrationWarning>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              // GitHub Pages SPA redirect handler
+              (function(){
+                var redirect = sessionStorage.redirect;
+                delete sessionStorage.redirect;
+                if (redirect && redirect !== location.href) {
+                  history.replaceState(null, '', redirect);
+                }
+                // Handle 404.html ?/ redirect
+                var loc = window.location;
+                if (loc.search[1] === '/') {
+                  var decoded = loc.search.slice(1).split('&').map(function(s){
+                    return s.replace(/~and~/g,'&')
+                  }).join('?');
+                  var newPath = loc.pathname.slice(0, -1) + decoded + loc.hash;
+                  history.replaceState(null, '', newPath);
+                }
+              })();
+            `,
+          }}
+        />
+      </head>
       <body className="antialiased">
         <Providers>
           <AppShell>

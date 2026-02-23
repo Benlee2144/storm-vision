@@ -1,12 +1,12 @@
 {
-  "total": 53303,
+  "total": 39297,
   "states": {
     "AK": {
       "count": 365,
       "file": "ak.json"
     },
     "AL": {
-      "count": 0,
+      "count": 580,
       "file": "al.json"
     },
     "AR": {
@@ -18,7 +18,7 @@
       "file": "az.json"
     },
     "CA": {
-      "count": 3219,
+      "count": 4637,
       "file": "ca.json"
     },
     "CO": {
@@ -42,7 +42,7 @@
       "file": "fl.json"
     },
     "GA": {
-      "count": 4984,
+      "count": 10768,
       "file": "ga.json"
     },
     "HI": {
@@ -62,7 +62,7 @@
       "file": "il.json"
     },
     "IN": {
-      "count": 0,
+      "count": 1066,
       "file": "in.json"
     },
     "KS": {
@@ -90,7 +90,7 @@
       "file": "me.json"
     },
     "MI": {
-      "count": 116,
+      "count": 1670,
       "file": "mi.json"
     },
     "MN": {
@@ -134,11 +134,11 @@
       "file": "nm.json"
     },
     "NV": {
-      "count": 622,
+      "count": 1171,
       "file": "nv.json"
     },
     "NY": {
-      "count": 1689,
+      "count": 4675,
       "file": "ny.json"
     },
     "OH": {
@@ -182,7 +182,7 @@
       "file": "ut.json"
     },
     "VA": {
-      "count": 285,
+      "count": 2744,
       "file": "va.json"
     },
     "VT": {

@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useRef, useState, useCallback, useMemo } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
 import maplibregl from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import { useRadarFrames } from '@/hooks/useRadarFrames';
@@ -7,9 +7,6 @@ import { useRadarStore } from '@/stores/useRadarStore';
 import { useNationalAlerts } from '@/hooks/useAlerts';
 import { getAlertConfig } from '@/lib/constants/alert-types';
 import { formatRadarTime } from '@/lib/api/rainviewer';
-import { getAllStormCameras } from '@/lib/utils/geo';
-import { fetchCamerasForStates } from '@/hooks/useCameras';
-import type { CameraData } from '@/components/cameras/CameraCard';
 import { RadarControls } from './RadarControls';
 import { LayerPanel } from './LayerPanel';
 
@@ -20,50 +17,27 @@ const MAP_STYLES: Record<string, string> = {
   terrain: 'https://tiles.openfreemap.org/styles/liberty',
 };
 
+// Detect basePath for GitHub Pages
+function getBase() {
+  if (typeof window === 'undefined') return '';
+  const match = window.location.pathname.match(/^\/([^/]+)\//);
+  return match ? `/${match[1]}` : '';
+}
+
 export function RadarMap() {
   const mapContainer = useRef<HTMLDivElement>(null);
   const map = useRef<maplibregl.Map | null>(null);
   const animRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [mapLoaded, setMapLoaded] = useState(false);
   const [frameTime, setFrameTime] = useState('');
-  const [stormCameras, setStormCameras] = useState<CameraData[]>([]);
+  const camerasLoadedRef = useRef(false);
 
   const { data: radarData } = useRadarFrames();
   const { data: alerts } = useNationalAlerts();
   const {
     playing, speed, currentFrame, opacity, showRadar, showAlerts, showCameras,
-    mapStyle, setCurrentFrame, setTotalFrames, setPlaying,
+    mapStyle, setCurrentFrame, setTotalFrames,
   } = useRadarStore();
-
-  // Load cameras for states with active alerts
-  useEffect(() => {
-    if (!alerts || alerts.length === 0) return;
-
-    const stateCodesFromAlerts = new Set<string>();
-    alerts.forEach((a) => {
-      const area = a.properties.areaDesc || '';
-      const matches = area.match(/\b[A-Z]{2}\b/g);
-      if (matches) matches.forEach((m) => stateCodesFromAlerts.add(m));
-    });
-
-    const validStates = new Set([
-      'AL','AK','AZ','AR','CA','CO','CT','DE','FL','GA','HI','ID','IL','IN','IA',
-      'KS','KY','LA','ME','MD','MA','MI','MN','MS','MO','MT','NE','NV','NH','NJ',
-      'NM','NY','NC','ND','OH','OK','OR','PA','RI','SC','SD','TN','TX','UT','VT',
-      'VA','WA','WV','WI','WY','DC',
-    ]);
-
-    const stateCodes = Array.from(stateCodesFromAlerts).filter((c) => validStates.has(c));
-    if (stateCodes.length === 0) return;
-
-    fetchCamerasForStates(stateCodes).then(setStormCameras);
-  }, [alerts]);
-
-  // Storm cameras: cameras inside active warning polygons
-  const stormCams = useMemo(() => {
-    if (!alerts || stormCameras.length === 0) return [];
-    return getAllStormCameras(stormCameras, alerts);
-  }, [alerts, stormCameras]);
 
   // Initialize map
   useEffect(() => {
@@ -75,16 +49,14 @@ export function RadarMap() {
       center: [-98.5, 39.5],
       zoom: 4,
       attributionControl: false,
-      maxZoom: 12,
+      maxZoom: 18,
       minZoom: 3,
     });
 
     map.current.addControl(new maplibregl.NavigationControl(), 'top-right');
     map.current.addControl(new maplibregl.AttributionControl({ compact: true }), 'bottom-right');
 
-    map.current.on('load', () => {
-      setMapLoaded(true);
-    });
+    map.current.on('load', () => setMapLoaded(true));
 
     return () => {
       map.current?.remove();
@@ -93,10 +65,105 @@ export function RadarMap() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Add/update radar frames
+  // ── ALL CAMERAS as GeoJSON circle layer (62K+ points) ──
+  useEffect(() => {
+    if (!mapLoaded || !map.current || camerasLoadedRef.current) return;
+    const m = map.current;
+
+    const base = getBase();
+    fetch(`${base}/data/cameras/markers.json`)
+      .then((r) => r.json())
+      .then((markers: Array<{ i: string; n: string; a: number; o: number; s: string; c: string }>) => {
+        if (!m || m._removed) return;
+
+        const geojson: GeoJSON.FeatureCollection = {
+          type: 'FeatureCollection',
+          features: markers.map((mk) => ({
+            type: 'Feature' as const,
+            geometry: { type: 'Point' as const, coordinates: [mk.o, mk.a] },
+            properties: { id: mk.i, name: mk.n, state: mk.s, cat: mk.c },
+          })),
+        };
+
+        m.addSource('all-cameras', { type: 'geojson', data: geojson });
+
+        // Circles — scale with zoom
+        m.addLayer({
+          id: 'cameras-circle',
+          type: 'circle',
+          source: 'all-cameras',
+          paint: {
+            'circle-radius': [
+              'interpolate', ['linear'], ['zoom'],
+              3, 1.5,
+              6, 3,
+              9, 5,
+              12, 8,
+              15, 12,
+            ],
+            'circle-color': '#00d4ff',
+            'circle-opacity': [
+              'interpolate', ['linear'], ['zoom'],
+              3, 0.4,
+              6, 0.6,
+              9, 0.8,
+              12, 1,
+            ],
+            'circle-stroke-width': [
+              'interpolate', ['linear'], ['zoom'],
+              3, 0,
+              8, 1,
+              12, 1.5,
+            ],
+            'circle-stroke-color': '#ffffff',
+            'circle-stroke-opacity': 0.6,
+          },
+        });
+
+        // Click → popup with camera info + link to stream
+        m.on('click', 'cameras-circle', (e) => {
+          if (!e.features || !e.features[0]) return;
+          const props = e.features[0].properties!;
+          const coords = (e.features[0].geometry as GeoJSON.Point).coordinates.slice() as [number, number];
+
+          // Build stream URL (camera detail page)
+          const camUrl = `${base}/cameras/${encodeURIComponent(props.id)}/`;
+
+          new maplibregl.Popup({ offset: 12, maxWidth: '260px' })
+            .setLngLat(coords)
+            .setHTML(`
+              <div style="font-family:system-ui,sans-serif;">
+                <strong style="font-size:13px;color:#00d4ff;">${props.name}</strong>
+                <p style="font-size:11px;opacity:0.7;margin:2px 0 6px;">${props.state}</p>
+                <a href="${camUrl}" style="display:inline-block;padding:4px 10px;background:#00d4ff;color:#000;border-radius:6px;font-size:11px;font-weight:600;text-decoration:none;">
+                  ▶ Watch Live
+                </a>
+              </div>
+            `)
+            .addTo(m);
+        });
+
+        m.on('mouseenter', 'cameras-circle', () => { m.getCanvas().style.cursor = 'pointer'; });
+        m.on('mouseleave', 'cameras-circle', () => { m.getCanvas().style.cursor = ''; });
+
+        camerasLoadedRef.current = true;
+        console.log(`[RadarMap] Loaded ${markers.length} camera markers`);
+      })
+      .catch((err) => console.warn('[RadarMap] Failed to load camera markers:', err));
+  }, [mapLoaded]);
+
+  // Toggle camera layer visibility
+  useEffect(() => {
+    if (!map.current || !mapLoaded) return;
+    const m = map.current;
+    if (m.getLayer('cameras-circle')) {
+      m.setLayoutProperty('cameras-circle', 'visibility', showCameras ? 'visible' : 'none');
+    }
+  }, [showCameras, mapLoaded]);
+
+  // ── RADAR FRAMES ──
   useEffect(() => {
     if (!mapLoaded || !map.current || !radarData) return;
-
     const m = map.current;
     const allFrames = [...radarData.radar.past, ...radarData.radar.nowcast];
     setTotalFrames(allFrames.length);
@@ -132,7 +199,11 @@ export function RadarMap() {
       });
     });
 
-    // Show first frame
+    // Ensure camera layer stays on top of radar
+    if (m.getLayer('cameras-circle')) {
+      m.moveLayer('cameras-circle');
+    }
+
     if (allFrames.length > 0) {
       setCurrentFrame(allFrames.length - 1);
     }
@@ -178,12 +249,11 @@ export function RadarMap() {
     return () => { if (animRef.current) clearInterval(animRef.current); };
   }, [playing, speed, radarData, setCurrentFrame, currentFrame]);
 
-  // Alert polygons
+  // ── ALERT POLYGONS ──
   useEffect(() => {
     if (!mapLoaded || !map.current || !alerts) return;
     const m = map.current;
 
-    // Remove old alert layers
     if (m.getSource('alerts-source')) {
       if (m.getLayer('alerts-fill')) m.removeLayer('alerts-fill');
       if (m.getLayer('alerts-outline')) m.removeLayer('alerts-outline');
@@ -197,7 +267,7 @@ export function RadarMap() {
       .map((a) => {
         const config = getAlertConfig(a.properties.event);
         return {
-          type: 'Feature',
+          type: 'Feature' as const,
           geometry: a.geometry,
           properties: {
             event: a.properties.event,
@@ -211,12 +281,10 @@ export function RadarMap() {
 
     if (features.length === 0) return;
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const geojson: any = { type: 'FeatureCollection', features };
-
     m.addSource('alerts-source', {
       type: 'geojson',
-      data: geojson,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      data: { type: 'FeatureCollection', features } as any,
     });
 
     m.addLayer({
@@ -240,7 +308,11 @@ export function RadarMap() {
       },
     });
 
-    // Click handler for alerts
+    // Keep cameras on top of alerts
+    if (m.getLayer('cameras-circle')) {
+      m.moveLayer('cameras-circle');
+    }
+
     m.on('click', 'alerts-fill', (e) => {
       if (e.features && e.features[0]) {
         const props = e.features[0].properties;
@@ -261,68 +333,6 @@ export function RadarMap() {
 
   }, [mapLoaded, alerts, showAlerts]);
 
-  // Storm camera markers on the radar map
-  const markersRef = useRef<maplibregl.Marker[]>([]);
-
-  useEffect(() => {
-    // Clear previous markers
-    markersRef.current.forEach((m) => m.remove());
-    markersRef.current = [];
-
-    if (!mapLoaded || !map.current || !showCameras || stormCams.length === 0) return;
-
-    const m = map.current;
-
-    for (const sc of stormCams) {
-      const cam = sc.camera;
-      const topAlert = sc.alerts[0];
-      const config = getAlertConfig(topAlert.properties.event);
-      const isTornado = topAlert.properties.event === 'Tornado Warning';
-
-      // Create a camera marker element
-      const el = document.createElement('div');
-      el.style.cssText = `
-        width: ${isTornado ? 28 : 22}px;
-        height: ${isTornado ? 28 : 22}px;
-        border-radius: 50%;
-        background: ${config.color};
-        border: 2px solid white;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        box-shadow: 0 0 ${isTornado ? 12 : 6}px ${config.color};
-        ${isTornado ? 'animation: pulse 1.5s infinite;' : ''}
-      `;
-      el.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg>`;
-
-      const alertList = sc.alerts
-        .map((a) => {
-          const c = getAlertConfig(a.properties.event);
-          return `<span style="color:${c.color};font-size:11px;">&#9679; ${a.properties.event}</span>`;
-        })
-        .join('<br/>');
-
-      const popup = new maplibregl.Popup({ offset: 15, maxWidth: '280px' }).setHTML(`
-        <div style="font-family:system-ui,sans-serif;">
-          <strong style="font-size:13px;">${cam.name}</strong>
-          <p style="font-size:11px;opacity:0.7;margin:2px 0 6px;">${cam.city}, ${cam.stateCode}</p>
-          ${alertList}
-          <a href="/storm-cams" style="display:inline-block;margin-top:8px;font-size:11px;color:#00d4ff;text-decoration:none;">
-            &#9658; Watch Storm Cams
-          </a>
-        </div>
-      `);
-
-      const marker = new maplibregl.Marker({ element: el })
-        .setLngLat([cam.longitude, cam.latitude])
-        .setPopup(popup)
-        .addTo(m);
-
-      markersRef.current.push(marker);
-    }
-  }, [mapLoaded, showCameras, stormCams]);
-
   return (
     <div className="relative w-full h-full">
       <div ref={mapContainer} className="w-full h-full" />
@@ -337,15 +347,18 @@ export function RadarMap() {
         </div>
       )}
 
-      {/* Controls */}
       <RadarControls />
       <LayerPanel />
 
-      {/* RainViewer credit */}
+      {/* Credits */}
       <div className="absolute bottom-2 left-2 z-10 text-[10px] text-[var(--text-tertiary)]">
-        Radar data by{' '}
+        Radar:{' '}
         <a href="https://www.rainviewer.com" target="_blank" rel="noopener noreferrer" className="underline">
           RainViewer
+        </a>
+        {' · Cameras: '}
+        <a href="https://opencctv.org" target="_blank" rel="noopener noreferrer" className="underline">
+          OpenCCTV
         </a>
       </div>
     </div>

@@ -36,7 +36,7 @@ export const useRadarStore = create<RadarState>((set) => ({
   showRadar: true,
   showSatellite: false,
   showAlerts: true,
-  showCameras: false,
+  showCameras: true,
   showStormReports: false,
   mapStyle: 'dark',
 

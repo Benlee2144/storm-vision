@@ -1,5 +1,5 @@
 {
-  "total": 17780,
+  "total": 53303,
   "states": {
     "AK": {
       "count": 365,
@@ -22,11 +22,11 @@
       "file": "ca.json"
     },
     "CO": {
-      "count": 488,
+      "count": 1194,
       "file": "co.json"
     },
     "CT": {
-      "count": 2,
+      "count": 349,
       "file": "ct.json"
     },
     "DC": {
@@ -50,7 +50,7 @@
       "file": "hi.json"
     },
     "IA": {
-      "count": 407,
+      "count": 1027,
       "file": "ia.json"
     },
     "ID": {
@@ -94,7 +94,7 @@
       "file": "mi.json"
     },
     "MN": {
-      "count": 197,
+      "count": 2542,
       "file": "mn.json"
     },
     "MO": {
@@ -118,7 +118,7 @@
       "file": "nd.json"
     },
     "NE": {
-      "count": 2,
+      "count": 354,
       "file": "ne.json"
     },
     "NH": {
@@ -146,7 +146,7 @@
       "file": "oh.json"
     },
     "OK": {
-      "count": 2,
+      "count": 753,
       "file": "ok.json"
     },
     "OR": {

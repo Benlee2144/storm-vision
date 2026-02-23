@@ -1,209 +1,52 @@
 {
-  "total": 10723,
-  "states": {
-    "AK": {
-      "count": 322,
-      "file": "ak.json"
-    },
-    "AL": {
-      "count": 0,
-      "file": "al.json"
-    },
-    "AR": {
-      "count": 0,
-      "file": "ar.json"
-    },
-    "AZ": {
-      "count": 533,
-      "file": "az.json"
-    },
-    "CA": {
-      "count": 3375,
-      "file": "ca.json"
-    },
-    "CO": {
-      "count": 0,
-      "file": "co.json"
-    },
-    "CT": {
-      "count": 349,
-      "file": "ct.json"
-    },
-    "DC": {
-      "count": 0,
-      "file": "dc.json"
-    },
-    "DE": {
-      "count": 0,
-      "file": "de.json"
-    },
-    "FL": {
-      "count": 0,
-      "file": "fl.json"
-    },
-    "GA": {
-      "count": 0,
-      "file": "ga.json"
-    },
-    "HI": {
-      "count": 0,
-      "file": "hi.json"
-    },
-    "IA": {
-      "count": 0,
-      "file": "ia.json"
-    },
-    "ID": {
-      "count": 435,
-      "file": "id.json"
-    },
-    "IL": {
-      "count": 1013,
-      "file": "il.json"
-    },
-    "IN": {
-      "count": 1066,
-      "file": "in.json"
-    },
-    "KS": {
-      "count": 0,
-      "file": "ks.json"
-    },
-    "KY": {
-      "count": 0,
-      "file": "ky.json"
-    },
-    "LA": {
-      "count": 489,
-      "file": "la.json"
-    },
-    "MA": {
-      "count": 0,
-      "file": "ma.json"
-    },
-    "MD": {
-      "count": 0,
-      "file": "md.json"
-    },
-    "ME": {
-      "count": 0,
-      "file": "me.json"
-    },
-    "MI": {
-      "count": 0,
-      "file": "mi.json"
-    },
-    "MN": {
-      "count": 0,
-      "file": "mn.json"
-    },
-    "MO": {
-      "count": 0,
-      "file": "mo.json"
-    },
-    "MS": {
-      "count": 0,
-      "file": "ms.json"
-    },
-    "MT": {
-      "count": 0,
-      "file": "mt.json"
-    },
-    "NC": {
-      "count": 71,
-      "file": "nc.json"
-    },
-    "ND": {
-      "count": 0,
-      "file": "nd.json"
-    },
-    "NE": {
-      "count": 354,
-      "file": "ne.json"
-    },
-    "NH": {
-      "count": 0,
-      "file": "nh.json"
-    },
-    "NJ": {
-      "count": 0,
-      "file": "nj.json"
-    },
-    "NM": {
-      "count": 0,
-      "file": "nm.json"
-    },
-    "NV": {
-      "count": 0,
-      "file": "nv.json"
-    },
-    "NY": {
-      "count": 0,
-      "file": "ny.json"
-    },
-    "OH": {
-      "count": 0,
-      "file": "oh.json"
-    },
-    "OK": {
-      "count": 0,
-      "file": "ok.json"
-    },
-    "OR": {
-      "count": 168,
-      "file": "or.json"
-    },
-    "PA": {
-      "count": 121,
-      "file": "pa.json"
-    },
-    "RI": {
-      "count": 0,
-      "file": "ri.json"
-    },
-    "SC": {
-      "count": 0,
-      "file": "sc.json"
-    },
-    "SD": {
-      "count": 0,
-      "file": "sd.json"
-    },
-    "TN": {
-      "count": 162,
-      "file": "tn.json"
-    },
-    "TX": {
-      "count": 0,
-      "file": "tx.json"
-    },
-    "UT": {
-      "count": 293,
-      "file": "ut.json"
-    },
-    "VA": {
-      "count": 0,
-      "file": "va.json"
-    },
-    "VT": {
-      "count": 0,
-      "file": "vt.json"
-    },
-    "WA": {
-      "count": 1633,
-      "file": "wa.json"
-    },
-    "WI": {
-      "count": 331,
-      "file": "wi.json"
-    },
-    "WV": {
-      "count": 0,
-      "file": "wv.json"
-    },
-    "WY": {
-      "count": 8,
-      "file": "wy.json"
-    }
-  }
+  "FL": 4665,
+  "TX": 2339,
+  "LA": 328,
+  "CA": 6830,
+  "AZ": 722,
+  "NM": 197,
+  "AL": 1222,
+  "GA": 2893,
+  "SC": 1470,
+  "NV": 727,
+  "OK": 1,
+  "TN": 568,
+  "NC": 340,
+  "NE": 354,
+  "UT": 2002,
+  "CO": 2441,
+  "KS": 728,
+  "MO": 1057,
+  "IL": 4167,
+  "IN": 656,
+  "KY": 1208,
+  "OH": 2263,
+  "VA": 1482,
+  "WV": 127,
+  "MD": 557,
+  "DE": 633,
+  "NJ": 60,
+  "OR": 1136,
+  "AK": 746,
+  "ID": 461,
+  "WY": 733,
+  "IA": 4196,
+  "MI": 1519,
+  "PA": 1433,
+  "NY": 2880,
+  "RI": 135,
+  "CT": 265,
+  "MA": 8,
+  "MT": 124,
+  "MS": 4,
+  "SD": 201,
+  "MN": 1744,
+  "WI": 450,
+  "VT": 85,
+  "ME": 178,
+  "NH": 179,
+  "WA": 3545,
+  "ND": 1643,
+  "HI": 215,
+  "_total": 61917
 }

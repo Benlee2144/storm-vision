@@ -1,1 +1,1 @@
-[]
+[{"id": "earthcam-usa-oklahoma-edmond", "name": "University of Central Oklahoma", "latitude": 35.653, "longitude": -97.478, "city": "Edmond", "state": "Oklahoma", "stateCode": "OK", "source": "opencctv.org", "category": "traffic", "streamType": "image_refresh", "streamUrl": "https://static.earthcam.com/camshots/512x288/be88cd1107724019a2ad9dd9ca667449.jpg", "thumbnailUrl": "https://static.earthcam.com/camshots/512x288/be88cd1107724019a2ad9dd9ca667449.jpg", "isActive": true, "attribution": "opencctv.org"}]

@@ -7,8 +7,8 @@ import { CurrentConditions } from '@/components/weather/CurrentConditions';
 import { CameraCard } from '@/components/cameras/CameraCard';
 import { useCameraById } from '@/hooks/useCameras';
 
-export default function CameraDetailClient({ params }: { params: Promise<{ id: string }> }) {
-  const { id } = use(params);
+export default function CameraDetailClient({ params }: { params: Promise<{ id: string | string[] }> }) {
+  const { id: idArr } = use(params); const id = Array.isArray(idArr) ? idArr[0] : idArr;
   const { camera, nearby, loading } = useCameraById(id);
 
   if (loading) {

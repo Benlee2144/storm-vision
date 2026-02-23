@@ -1,12 +1,12 @@
 {
-  "total": 50617,
+  "total": 17780,
   "states": {
     "AK": {
-      "count": 461,
+      "count": 365,
       "file": "ak.json"
     },
     "AL": {
-      "count": 580,
+      "count": 0,
       "file": "al.json"
     },
     "AR": {
@@ -14,15 +14,15 @@
       "file": "ar.json"
     },
     "AZ": {
-      "count": 609,
+      "count": 535,
       "file": "az.json"
     },
     "CA": {
-      "count": 4637,
+      "count": 3219,
       "file": "ca.json"
     },
     "CO": {
-      "count": 1080,
+      "count": 488,
       "file": "co.json"
     },
     "CT": {
@@ -30,7 +30,7 @@
       "file": "ct.json"
     },
     "DC": {
-      "count": 3,
+      "count": 0,
       "file": "dc.json"
     },
     "DE": {
@@ -38,31 +38,31 @@
       "file": "de.json"
     },
     "FL": {
-      "count": 3640,
+      "count": 0,
       "file": "fl.json"
     },
     "GA": {
-      "count": 10768,
+      "count": 4984,
       "file": "ga.json"
     },
     "HI": {
-      "count": 172,
+      "count": 0,
       "file": "hi.json"
     },
     "IA": {
-      "count": 1420,
+      "count": 407,
       "file": "ia.json"
     },
     "ID": {
-      "count": 451,
+      "count": 435,
       "file": "id.json"
     },
     "IL": {
-      "count": 3682,
+      "count": 1013,
       "file": "il.json"
     },
     "IN": {
-      "count": 1066,
+      "count": 0,
       "file": "in.json"
     },
     "KS": {
@@ -70,35 +70,35 @@
       "file": "ks.json"
     },
     "KY": {
-      "count": 3,
+      "count": 0,
       "file": "ky.json"
     },
     "LA": {
-      "count": 688,
+      "count": 489,
       "file": "la.json"
     },
     "MA": {
-      "count": 4,
+      "count": 0,
       "file": "ma.json"
     },
     "MD": {
-      "count": 557,
+      "count": 100,
       "file": "md.json"
     },
     "ME": {
-      "count": 3,
+      "count": 0,
       "file": "me.json"
     },
     "MI": {
-      "count": 1670,
+      "count": 116,
       "file": "mi.json"
     },
     "MN": {
-      "count": 1027,
+      "count": 197,
       "file": "mn.json"
     },
     "MO": {
-      "count": 759,
+      "count": 0,
       "file": "mo.json"
     },
     "MS": {
@@ -106,11 +106,11 @@
       "file": "ms.json"
     },
     "MT": {
-      "count": 3,
+      "count": 0,
       "file": "mt.json"
     },
     "NC": {
-      "count": 771,
+      "count": 71,
       "file": "nc.json"
     },
     "ND": {
@@ -126,23 +126,23 @@
       "file": "nh.json"
     },
     "NJ": {
-      "count": 4,
+      "count": 0,
       "file": "nj.json"
     },
     "NM": {
-      "count": 3,
+      "count": 0,
       "file": "nm.json"
     },
     "NV": {
-      "count": 1171,
+      "count": 622,
       "file": "nv.json"
     },
     "NY": {
-      "count": 4675,
+      "count": 1689,
       "file": "ny.json"
     },
     "OH": {
-      "count": 39,
+      "count": 0,
       "file": "oh.json"
     },
     "OK": {
@@ -150,11 +150,11 @@
       "file": "ok.json"
     },
     "OR": {
-      "count": 1137,
+      "count": 168,
       "file": "or.json"
     },
     "PA": {
-      "count": 1433,
+      "count": 121,
       "file": "pa.json"
     },
     "RI": {
@@ -162,7 +162,7 @@
       "file": "ri.json"
     },
     "SC": {
-      "count": 4,
+      "count": 0,
       "file": "sc.json"
     },
     "SD": {
@@ -170,19 +170,19 @@
       "file": "sd.json"
     },
     "TN": {
-      "count": 670,
+      "count": 162,
       "file": "tn.json"
     },
     "TX": {
-      "count": 39,
+      "count": 25,
       "file": "tx.json"
     },
     "UT": {
-      "count": 2006,
+      "count": 293,
       "file": "ut.json"
     },
     "VA": {
-      "count": 2744,
+      "count": 285,
       "file": "va.json"
     },
     "VT": {
@@ -190,19 +190,19 @@
       "file": "vt.json"
     },
     "WA": {
-      "count": 1650,
+      "count": 1633,
       "file": "wa.json"
     },
     "WI": {
-      "count": 870,
+      "count": 331,
       "file": "wi.json"
     },
     "WV": {
-      "count": 79,
+      "count": 0,
       "file": "wv.json"
     },
     "WY": {
-      "count": 15,
+      "count": 8,
       "file": "wy.json"
     }
   }

@@ -4,27 +4,48 @@ import { Providers } from '@/components/layout/Providers';
 import { AppShell } from '@/components/layout/AppShell';
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://benlee2144.github.io/storm-vision'),
   title: {
-    default: 'Storm Vision | Real-Time Weather Intelligence & Live Cameras',
+    default: 'Storm Vision | Free Live Storm Cams, Radar & Weather Alerts',
     template: '%s | Storm Vision',
   },
   description:
-    'The most comprehensive weather platform with real-time radar, severe weather alerts, and thousands of live cameras across every US city. Every camera. Every storm. Every city.',
-  keywords: ['weather', 'radar', 'live cameras', 'severe weather', 'tornado warning', 'storm tracking', 'webcams', 'forecast'],
+    'The #1 free real-time storm tracking platform with 60,000+ live cameras, animated radar, severe weather alerts, and 7-day forecasts. Track tornadoes, hurricanes, and storms live. No signup required.',
+  keywords: [
+    'live storm cams', 'free radar', 'weather radar', 'tornado tracker', 'hurricane cam',
+    'live weather cameras', 'severe weather alerts', 'storm tracking', 'NWS alerts',
+    'live beach cams', 'traffic cameras', 'weather forecast', 'storm chaser live',
+    'tornado warning', 'hurricane warning', 'free weather app', 'live webcams weather',
+  ],
   authors: [{ name: 'Storm Vision' }],
+  creator: 'Storm Vision',
+  publisher: 'Storm Vision',
+  robots: { index: true, follow: true },
   openGraph: {
     type: 'website',
     locale: 'en_US',
     siteName: 'Storm Vision',
-    title: 'Storm Vision | Real-Time Weather Intelligence & Live Cameras',
-    description: 'Real-time radar, severe weather alerts, and thousands of live cameras across America.',
+    title: 'Storm Vision | Free Live Storm Cams & Real-Time Radar',
+    description: '60,000+ live cameras, animated radar, tornado tracking, and severe weather alerts — all free. Every camera. Every storm. Every city.',
+    images: [
+      {
+        url: '/og-image.png',
+        width: 1200,
+        height: 630,
+        alt: 'Storm Vision - Live Storm Cams and Radar',
+      },
+    ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Storm Vision',
-    description: 'Every camera. Every storm. Every city.',
+    title: 'Storm Vision | Free Live Storm Cams & Radar',
+    description: 'Every camera. Every storm. Every city. 60K+ live cams. Free.',
+    images: ['/og-image.png'],
   },
   manifest: '/manifest.json',
+  other: {
+    'google-adsense-account': 'ca-pub-XXXXXXXXXX',
+  },
 };
 
 export const viewport: Viewport = {
@@ -42,6 +63,8 @@ export default function RootLayout({
   return (
     <html lang="en" data-theme="dark" suppressHydrationWarning>
       <head>
+        <link rel="icon" href="/favicon.ico" sizes="any" />
+        <link rel="apple-touch-icon" href="/icons/icon-192.png" />
         <script
           dangerouslySetInnerHTML={{
             __html: `
@@ -52,7 +75,6 @@ export default function RootLayout({
                 if (redirect && redirect !== location.href) {
                   history.replaceState(null, '', redirect);
                 }
-                // Handle 404.html ?/ redirect
                 var loc = window.location;
                 if (loc.search[1] === '/') {
                   var decoded = loc.search.slice(1).split('&').map(function(s){
@@ -62,6 +84,12 @@ export default function RootLayout({
                   history.replaceState(null, '', newPath);
                 }
               })();
+              // Register service worker
+              if ('serviceWorker' in navigator) {
+                window.addEventListener('load', function() {
+                  navigator.serviceWorker.register('/sw.js').catch(function() {});
+                });
+              }
             `,
           }}
         />

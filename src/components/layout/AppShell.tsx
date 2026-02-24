@@ -3,6 +3,7 @@ import { usePathname } from 'next/navigation';
 import { useSettingsStore } from '@/stores/useSettingsStore';
 import { IconRail } from './IconRail';
 import { MobileNav } from './MobileNav';
+import { AlertTicker } from '@/components/weather/AlertTicker';
 
 /**
  * AppShell manages the layout: thin icon rail on desktop, bottom nav on mobile.
@@ -17,6 +18,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
   return (
     <>
+      <AlertTicker />
       <IconRail />
       <MobileNav />
       <main

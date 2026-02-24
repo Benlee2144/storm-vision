@@ -35,9 +35,10 @@ export function RadarMap() {
   const { data: radarData } = useRadarFrames();
   const { data: alerts } = useNationalAlerts();
   const {
-    playing, speed, currentFrame, opacity, showRadar, showAlerts, showCameras,
+    playing, speed, currentFrame, opacity, showRadar, showSatellite, showAlerts, showCameras,
     mapStyle, setCurrentFrame, setTotalFrames,
   } = useRadarStore();
+  const satelliteLayerRef = useRef(false);
 
   // Initialize map
   useEffect(() => {
@@ -240,6 +241,63 @@ export function RadarMap() {
       setCurrentFrame(allFrames.length - 1);
     }
   }, [mapLoaded, radarData, setCurrentFrame, setTotalFrames]);
+
+  // ── SATELLITE INFRARED LAYER ──
+  useEffect(() => {
+    if (!mapLoaded || !map.current || !radarData) return;
+    const m = map.current;
+    const irFrames = radarData.satellite?.infrared || [];
+    if (irFrames.length === 0) return;
+
+    // Use latest satellite frame
+    const latestIR = irFrames[irFrames.length - 1];
+    const satSourceId = 'satellite-ir';
+    const satLayerId = 'satellite-ir-layer';
+
+    // Remove old satellite layer if exists
+    if (m.getLayer(satLayerId)) m.removeLayer(satLayerId);
+    if (m.getSource(satSourceId)) m.removeSource(satSourceId);
+
+    const satTileUrl = `${radarData.host}${latestIR.path}/256/{z}/{x}/{y}/0/0_0.png`;
+
+    m.addSource(satSourceId, {
+      type: 'raster',
+      tiles: [satTileUrl],
+      tileSize: 256,
+      // @ts-expect-error - MapLibre supports this but types are incomplete
+      crossOrigin: null,
+    });
+
+    m.addLayer({
+      id: satLayerId,
+      type: 'raster',
+      source: satSourceId,
+      paint: {
+        'raster-opacity': showSatellite ? 0.5 : 0,
+        'raster-opacity-transition': { duration: 300 },
+      },
+    });
+
+    // Keep radar frames and camera layer on top
+    const allFrameIds = [...radarData.radar.past, ...radarData.radar.nowcast].map((_, i) => `radar-frame-${i}`);
+    for (const fid of allFrameIds) {
+      if (m.getLayer(fid)) m.moveLayer(fid);
+    }
+    if (m.getLayer('alerts-fill')) m.moveLayer('alerts-fill');
+    if (m.getLayer('alerts-outline')) m.moveLayer('alerts-outline');
+    if (m.getLayer('cameras-circle')) m.moveLayer('cameras-circle');
+
+    satelliteLayerRef.current = true;
+  }, [mapLoaded, radarData, showSatellite]);
+
+  // Toggle satellite visibility
+  useEffect(() => {
+    if (!map.current || !mapLoaded) return;
+    const m = map.current;
+    if (m.getLayer('satellite-ir-layer')) {
+      m.setPaintProperty('satellite-ir-layer', 'raster-opacity', showSatellite ? 0.5 : 0);
+    }
+  }, [showSatellite, mapLoaded]);
 
   // Update visible frame
   const showFrame = useCallback((frameIndex: number) => {

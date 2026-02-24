@@ -4,11 +4,13 @@ import { motion } from 'framer-motion';
 import Link from 'next/link';
 import {
   Camera, AlertTriangle, Radio, Eye, Map,
-  BarChart3, Shield, ChevronRight,
-  Droplets, Wind, Thermometer,
+  BarChart3, Shield, ChevronRight, Heart,
+  Droplets, Wind, Thermometer, Share2,
 } from 'lucide-react';
 import { LocationSearch } from '@/components/shared/LocationSearch';
 import { AlertCard } from '@/components/weather/AlertCard';
+import { LiveClock } from '@/components/shared/LiveClock';
+import { ShareButton } from '@/components/shared/ShareButton';
 import { useGeolocation } from '@/hooks/useGeolocation';
 import { useWeather } from '@/hooks/useWeather';
 import { useAlerts, useNationalAlerts } from '@/hooks/useAlerts';
@@ -141,14 +143,14 @@ export default function HomePage() {
       >
         <div className="glass rounded-2xl px-2 py-1.5 flex items-center gap-1 shadow-2xl">
           <QuickNavBtn href="/radar" icon={Map} label="Radar" />
-          <QuickNavBtn href="/cameras" icon={Camera} label="Cameras" count="50K+" />
+          <QuickNavBtn href="/cameras" icon={Camera} label="Cameras" count="60K+" />
           <QuickNavBtn href="/storm-cams" icon={Shield} label="Storm Cams" />
           <QuickNavBtn href="/severe" icon={AlertTriangle} label="Severe" count={severeAlerts.length > 0 ? String(severeAlerts.length) : undefined} danger />
           <QuickNavBtn href="/forecast" icon={BarChart3} label="Forecast" />
         </div>
       </motion.div>
 
-      {/* FLOATING STATS — bottom right */}
+      {/* FLOATING STATS + CLOCK — bottom right */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -156,10 +158,17 @@ export default function HomePage() {
         className="absolute bottom-6 right-4 z-20 hidden lg:block"
       >
         <div className="glass rounded-2xl px-4 py-3 shadow-2xl">
-          <div className="flex items-center gap-5">
-            <MiniStat icon={Camera} value="50K+" label="Cameras" />
+          <div className="flex items-center gap-5 mb-2">
+            <MiniStat icon={Camera} value="60K+" label="Cameras" />
             <MiniStat icon={Radio} value="50" label="States" />
             <MiniStat icon={Eye} value="24/7" label="Live" />
+          </div>
+          <div className="flex items-center justify-between pt-2 border-t border-[var(--border)]">
+            <LiveClock className="text-xs" />
+            <ShareButton
+              text="Check out Storm Vision — 60K+ free live storm cams and radar!"
+              className="px-2 py-1 text-[10px]"
+            />
           </div>
         </div>
       </motion.div>

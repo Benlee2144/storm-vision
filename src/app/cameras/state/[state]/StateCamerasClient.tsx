@@ -1,5 +1,4 @@
 'use client';
-import { use } from 'react';
 import { ArrowLeft, Camera, Loader2 } from 'lucide-react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
@@ -7,9 +6,8 @@ import { CameraCard } from '@/components/cameras/CameraCard';
 import { STATE_BY_CODE } from '@/lib/constants/states';
 import { useStateCameras } from '@/hooks/useCameras';
 
-export default function StateCamerasClient({ params }: { params: Promise<{ state: string }> }) {
-  const { state } = use(params);
-  const stateCode = state?.toUpperCase();
+export default function StateCamerasClient({ stateCode: rawState }: { stateCode: string }) {
+  const stateCode = rawState?.toUpperCase();
   const stateInfo = STATE_BY_CODE[stateCode];
   const { data: stateCameras, loading } = useStateCameras(stateCode);
 

@@ -5,6 +5,7 @@ export function generateStaticParams() {
   return US_STATES.map((s) => ({ state: s.code.toLowerCase() }));
 }
 
-export default function StateCamerasPage({ params }: { params: Promise<{ state: string }> }) {
-  return <StateCamerasClient params={params} />;
+export default async function StateCamerasPage({ params }: { params: Promise<{ state: string }> }) {
+  const { state } = await params;
+  return <StateCamerasClient stateCode={state} />;
 }

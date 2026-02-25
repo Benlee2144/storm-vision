@@ -106,6 +106,24 @@ body {
   min-height: 100vh;
 }
 
+/* Premium ambient gradient */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background: 
+    radial-gradient(ellipse 80% 50% at 20% 0%, rgba(0, 212, 255, 0.06), transparent 60%),
+    radial-gradient(ellipse 60% 40% at 80% 100%, rgba(94, 92, 230, 0.04), transparent 50%);
+  pointer-events: none;
+}
+
+[data-theme="light"] body::before {
+  background: 
+    radial-gradient(ellipse 80% 50% at 20% 0%, rgba(0, 119, 204, 0.04), transparent 60%),
+    radial-gradient(ellipse 60% 40% at 80% 100%, rgba(75, 73, 182, 0.03), transparent 50%);
+}
+
 /* ═══════════════════════════════════════════════
    Glass Morphism
    ═══════════════════════════════════════════════ */
@@ -276,3 +294,100 @@ body {
 .alert-severe { border-left: 4px solid var(--warning); }
 .alert-moderate { border-left: 4px solid var(--caution); }
 .alert-minor { border-left: 4px solid var(--info); }
+
+/* ═══════════════════════════════════════════════
+   Premium Components
+   ═══════════════════════════════════════════════ */
+
+/* Glow effects for key elements */
+.glow-primary {
+  box-shadow: 0 0 20px var(--primary-glow), 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.glow-danger {
+  box-shadow: 0 0 20px var(--danger-glow), 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* Premium glass card with subtle gradient border */
+.glass-premium {
+  background: var(--bg-glass);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid var(--border);
+  position: relative;
+}
+
+.glass-premium::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(135deg, rgba(0, 212, 255, 0.15), transparent 40%, transparent 60%, rgba(94, 92, 230, 0.1));
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+/* Stat number glow */
+.stat-glow {
+  text-shadow: 0 0 20px currentColor;
+}
+
+/* Premium page header */
+.page-header {
+  position: relative;
+  padding-bottom: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.page-header::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border), var(--primary), var(--border), transparent);
+  opacity: 0.5;
+}
+
+/* Smooth page fade */
+.page-enter {
+  animation: page-fade-in 0.4s ease-out;
+}
+
+@keyframes page-fade-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Better focus styles */
+*:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Safe area padding for iOS */
+.pb-safe {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+/* Number animation */
+@keyframes count-up {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-count-up {
+  animation: count-up 0.6s ease-out;
+}
+
+/* Skeleton shimmer premium */
+.skeleton-premium {
+  background: linear-gradient(90deg, var(--bg-surface) 25%, var(--bg-elevated) 50%, var(--bg-surface) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+}

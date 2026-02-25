@@ -90,13 +90,15 @@ export default function CamerasPage() {
   }, []);
 
   return (
-    <div className="min-h-screen px-4 sm:px-6 py-6">
+    <div className="min-h-screen px-4 sm:px-6 py-6 page-enter">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 page-header">
           <div>
             <h1 className="text-2xl sm:text-3xl font-bold flex items-center gap-3">
-              <Camera className="text-[var(--primary)]" />
+              <div className="w-10 h-10 rounded-xl bg-[var(--primary)]/10 flex items-center justify-center">
+                <Camera className="text-[var(--primary)]" size={22} />
+              </div>
               Live Cameras
             </h1>
             <p className="text-sm text-[var(--text-secondary)] mt-1">

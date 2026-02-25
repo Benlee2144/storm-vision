@@ -43,7 +43,7 @@ export default function StormCamsPage() {
   );
 
   return (
-    <div className="min-h-screen px-4 sm:px-6 py-6">
+    <div className="min-h-screen px-4 sm:px-6 py-6 page-enter">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-6">

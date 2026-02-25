@@ -16,6 +16,7 @@ import { useWeather } from '@/hooks/useWeather';
 import { useAlerts, useNationalAlerts } from '@/hooks/useAlerts';
 import { getWeatherDescription } from '@/lib/api/openmeteo';
 import { formatTemp, formatWind, degreesToCardinal } from '@/lib/utils/formatters';
+import { getWeatherEmoji } from '@/lib/utils/weather-icons';
 import { MapLoadingSkeleton } from '@/components/ui/Skeleton';
 import { ErrorBoundary } from '@/components/ui/ErrorBoundary';
 
@@ -102,10 +103,15 @@ export default function HomePage() {
                 <p className="text-sm text-[var(--text-secondary)] mt-0.5">
                   {weatherDesc?.description}
                 </p>
+                {current.feelsLike !== undefined && Math.abs(current.feelsLike - current.temperature) > 3 && (
+                  <p className="text-xs text-[var(--text-tertiary)] mt-0.5">
+                    Feels like {Math.round(current.feelsLike)}°
+                  </p>
+                )}
               </div>
-              <div className="text-[var(--primary)] opacity-80">
-                <Thermometer size={28} />
-              </div>
+              <span className="text-4xl" role="img" aria-label={weatherDesc?.description}>
+                {getWeatherEmoji(current.weatherCode, current.isDay)}
+              </span>
             </div>
             <div className="grid grid-cols-3 gap-2 mt-3 pt-3 border-t border-[var(--border)]">
               <div className="text-center">

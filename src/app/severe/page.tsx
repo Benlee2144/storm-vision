@@ -48,12 +48,14 @@ export default function SevereWeatherPage() {
   const severeStorms = (alerts || []).filter((a) => a.properties.event === 'Severe Thunderstorm Warning');
 
   return (
-    <div className="min-h-screen px-4 sm:px-6 py-6">
+    <div className="min-h-screen px-4 sm:px-6 py-6 page-enter">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="mb-6">
+        <div className="page-header">
           <h1 className="text-2xl sm:text-3xl font-bold flex items-center gap-3 mb-2">
-            <AlertTriangle className="text-[var(--danger)]" />
+            <div className="w-10 h-10 rounded-xl bg-[var(--danger)]/10 flex items-center justify-center">
+              <AlertTriangle className="text-[var(--danger)]" size={22} />
+            </div>
             Severe Weather Center
           </h1>
           <p className="text-sm text-[var(--text-secondary)]">

@@ -50,12 +50,14 @@ export default function AlertsPage() {
   }, [alerts, searchQuery, severityFilter, typeFilter]);
 
   return (
-    <div className="min-h-screen px-4 sm:px-6 py-6">
+    <div className="min-h-screen px-4 sm:px-6 py-6 page-enter">
       <div className="max-w-7xl mx-auto">
-        <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center justify-between page-header">
           <div>
             <h1 className="text-2xl sm:text-3xl font-bold flex items-center gap-3">
-              <Bell className="text-[var(--warning)]" />
+              <div className="w-10 h-10 rounded-xl bg-[var(--warning)]/10 flex items-center justify-center">
+                <Bell className="text-[var(--warning)]" size={22} />
+              </div>
               Active Alerts
             </h1>
             <p className="text-sm text-[var(--text-secondary)] mt-1">

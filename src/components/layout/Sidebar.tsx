@@ -77,7 +77,7 @@ export function Sidebar() {
           <ThemeToggle />
           {!sidebarCollapsed && (
             <Link
-              href="/about"
+              href="/settings"
               className="p-2 rounded-xl text-[var(--text-secondary)] hover:text-[var(--text)] hover:bg-white/5 transition-colors"
             >
               <Settings size={18} />

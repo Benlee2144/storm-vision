@@ -75,7 +75,7 @@ export function IconRail() {
       <div className="flex flex-col items-center gap-2 py-3 border-t border-[var(--border)]">
         <ThemeToggle />
         <Link
-          href="/about"
+          href="/settings"
           className="flex items-center justify-center w-11 h-11 rounded-xl text-[var(--text-tertiary)] hover:text-[var(--text-secondary)] hover:bg-white/5 transition-colors"
           title="Settings"
         >

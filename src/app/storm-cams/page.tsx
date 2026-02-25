@@ -46,10 +46,10 @@ export default function StormCamsPage() {
     <div className="min-h-screen px-4 sm:px-6 py-6 page-enter">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="mb-6">
+        <div className="page-header">
           <div className="flex items-center gap-3 mb-2">
-            <div className="relative">
-              <Shield className="text-[var(--danger)]" size={28} />
+            <div className="relative w-10 h-10 rounded-xl bg-[var(--danger)]/10 flex items-center justify-center">
+              <Shield className="text-[var(--danger)]" size={22} />
               {totalCamerasInDanger > 0 && (
                 <span className="absolute -top-1 -right-1 flex h-3 w-3">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[var(--danger)] opacity-75" />

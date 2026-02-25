@@ -4,7 +4,7 @@ import { usePathname } from 'next/navigation';
 import { motion } from 'framer-motion';
 import {
   Home, Map, Camera, AlertTriangle, BarChart3,
-  Bell, Settings, ChevronLeft, ChevronRight, Shield
+  Bell, Settings, ChevronLeft, ChevronRight, Shield, Globe
 } from 'lucide-react';
 import { clsx } from 'clsx';
 import { Logo } from '@/components/shared/Logo';
@@ -19,6 +19,7 @@ const navItems = [
   { href: '/severe', icon: AlertTriangle, label: 'Severe Weather' },
   { href: '/forecast', icon: BarChart3, label: 'Forecast' },
   { href: '/alerts', icon: Bell, label: 'Alerts' },
+  { href: '/hazards', icon: Globe, label: 'Natural Hazards' },
 ];
 
 export function Sidebar() {

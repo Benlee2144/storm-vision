@@ -19,12 +19,14 @@ export default function FavoritesPage() {
   }, [favorites]);
 
   return (
-    <div className="min-h-screen px-4 sm:px-6 py-6">
+    <div className="min-h-screen px-4 sm:px-6 py-6 page-enter">
       <div className="max-w-7xl mx-auto">
-        <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center justify-between page-header">
           <div>
             <h1 className="text-2xl sm:text-3xl font-bold flex items-center gap-3">
-              <Heart className="text-red-500" />
+              <div className="w-10 h-10 rounded-xl bg-red-500/10 flex items-center justify-center">
+                <Heart className="text-red-500" size={22} />
+              </div>
               Favorites
             </h1>
             <p className="text-sm text-[var(--text-secondary)] mt-1">

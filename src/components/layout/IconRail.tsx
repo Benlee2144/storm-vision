@@ -4,7 +4,7 @@ import { usePathname } from 'next/navigation';
 import { motion } from 'framer-motion';
 import {
   Home, Map, Camera, AlertTriangle, BarChart3,
-  Bell, Shield, Settings, Heart,
+  Bell, Shield, Settings, Heart, Globe,
 } from 'lucide-react';
 import { clsx } from 'clsx';
 import { ThemeToggle } from '@/components/ui/ThemeToggle';
@@ -17,6 +17,7 @@ const navItems = [
   { href: '/severe', icon: AlertTriangle, label: 'Severe', tip: 'Severe Weather' },
   { href: '/forecast', icon: BarChart3, label: 'Forecast', tip: 'Forecast' },
   { href: '/alerts', icon: Bell, label: 'Alerts', tip: 'Alerts' },
+  { href: '/hazards', icon: Globe, label: 'Hazards', tip: 'Natural Hazards' },
   { href: '/favorites', icon: Heart, label: 'Favs', tip: 'Favorites' },
 ];
 

@@ -8,10 +8,11 @@ interface GlassCardProps {
   hover?: boolean;
   padding?: 'none' | 'sm' | 'md' | 'lg';
   onClick?: () => void;
+  style?: React.CSSProperties;
   animate?: boolean;
 }
 
-export function GlassCard({ children, className, hover = false, padding = 'md', onClick, animate = true }: GlassCardProps) {
+export function GlassCard({ children, className, hover = false, padding = 'md', onClick, animate = true, style }: GlassCardProps) {
   const paddingClass = {
     none: '',
     sm: 'p-3',
@@ -36,6 +37,7 @@ export function GlassCard({ children, className, hover = false, padding = 'md', 
         className
       )}
       onClick={onClick}
+      style={style}
       {...animateProps}
     >
       {children}

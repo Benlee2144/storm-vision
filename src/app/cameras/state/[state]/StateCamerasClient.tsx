@@ -12,7 +12,7 @@ export default function StateCamerasClient({ stateCode: rawState }: { stateCode:
   const { data: stateCameras, loading } = useStateCameras(stateCode);
 
   return (
-    <div className="min-h-screen px-4 sm:px-6 py-6">
+    <div className="min-h-screen px-4 sm:px-6 py-6 page-enter">
       <div className="max-w-7xl mx-auto">
         <Link
           href="/cameras"

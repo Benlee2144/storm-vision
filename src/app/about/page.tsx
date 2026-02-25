@@ -44,8 +44,8 @@ const dataSources = [
 ];
 
 const stats = [
-  { value: '50K+', label: 'Live Cameras', icon: Camera },
-  { value: '50', label: 'States Covered', icon: Globe },
+  { value: '60K+', label: 'Live Cameras', icon: Camera },
+  { value: '49', label: 'States Covered', icon: Globe },
   { value: '24/7', label: 'Real-Time Data', icon: Clock },
   { value: '100%', label: 'Free & Open', icon: Shield },
 ];
